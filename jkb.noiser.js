@@ -1,13 +1,13 @@
 class NoisePerlin {
     constructor(xPos = 0) {
         this.array = [];
-        this.noiseSeedSliderUI = new SliderWithLabel("Noise Seed", 1, 100, 20, 1, xPos, 50);
-        this.noiseScaleSliderUI = new SliderWithLabel("Noise Scale", 0.0001, 0.02, 0.004, 0.0001, xPos, 100);
-        this.noiseOffsetXUI = new SliderWithLabel("Noise Offset X", 0, 2000, 0, 1, xPos, 150);
-        this.noiseOffsetYUI = new SliderWithLabel("Noise Offset Y", 0, 2000, 0, 1, xPos, 200);
-        this.contrastSliderUI = new SliderWithLabel("Contrast", 0, 300, 30, 1, xPos, 250);
-        this.noiseOctavesUI = new SliderWithLabel("Noise Octaves", 0, 15, 6, 1, xPos, 300);
-        this.noiseFalloffUI = new SliderWithLabel("Noise Falloff", 0, 1, 0.25, 0.01, xPos, 350);
+        this.noiseSeedSliderUI = new SliderWithLabel("Noise Seed", 1, 100, 20, 1);
+        this.noiseScaleSliderUI = new SliderWithLabel("Noise Scale", 0.0001, 0.02, 0.004, 0.0001);
+        this.noiseOffsetXUI = new SliderWithLabel("Noise Offset X", 0, 2000, 0, 1);
+        this.noiseOffsetYUI = new SliderWithLabel("Noise Offset Y", 0, 2000, 0, 1);
+        this.contrastSliderUI = new SliderWithLabel("Contrast", 0, 300, 30, 1);
+        this.noiseOctavesUI = new SliderWithLabel("Noise Octaves", 0, 15, 6, 1);
+        this.noiseFalloffUI = new SliderWithLabel("Noise Falloff", 0, 1, 0.25, 0.01);
     }
 
     update() {

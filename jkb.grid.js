@@ -6,7 +6,6 @@ class Rectangle {
         this.y = y;
         this.width = width;
         this.height = height;
-        
     }
 }
 
@@ -18,31 +17,56 @@ class QuadTree {
         this.value = 0;
     }
 
-    evaluate(array){
-        let total = 0;
-        let counter = 0;
-        let avg = 0;
-
+    evaluate(array, useContrast = false){
         let startX = Math.floor(this.boundary.x - this.boundary.width * 0.9);
         let endX = Math.ceil(this.boundary.x + this.boundary.width * 0.9);
         let startY = Math.floor(this.boundary.y - this.boundary.height * 0.9);
         let endY = Math.ceil(this.boundary.y + this.boundary.height * 0.9);
 
-        this.value = 0;
-        for(let x=startX; x<endX; x++){
-            for(let y=startY; y<endY; y++){
-                let index = (x + y * width);
-                //console.log("x: " + x + " y: " + y + " index: " + index);
-                this.value += array[index];
-                if(this.value >= this.capacity && this.boundary.width > 3 && this.boundary.height > 3){
-                    this.subdivide(array);
-                    
+        if (useContrast) {
+            // Calculate contrast using standard deviation
+            let total = 0;
+            let counter = 0;
+            for(let x=startX; x<endX; x++){
+                for(let y=startY; y<endY; y++){
+                    let index = (x + y * width);    
+                    total += array[index];
+                    counter++;
+                }
+            }
+            let mean = total / counter;
+
+            let varianceSum = 0;
+            for(let x=startX; x<endX; x++){
+                for(let y=startY; y<endY; y++){
+                    let index = (x + y * width);
+                    varianceSum += (array[index] - mean) ** 2;
+                }
+            }
+
+            //contrastValue = 0   --> no contrast
+            //contrastValue = 0.5 --> high contrast
+            let contrastValue = sqrt(varianceSum / (this.boundary.width * this.boundary.height));
+            this.value = contrastValue * 1500;
+
+        } else {
+            // Standard evaluation based on capacity
+            this.value = 0;
+            for(let x=startX; x<endX; x++){
+                for(let y=startY; y<endY; y++){
+                    let index = (x + y * width);
+                    this.value += array[index];
                 }
             }
         }
+
+        if ((useContrast ? this.value >= this.capacity : this.value >= this.capacity) && 
+            this.boundary.width > 3 && this.boundary.height > 3) {
+            this.subdivide(array, useContrast);
+        }
     }
 
-    subdivide(array)
+    subdivide(array, useContrast = false)
     {
         if(this.divided) return;
 
@@ -63,11 +87,10 @@ class QuadTree {
 
         this.divided = true;
 
-        this.nw.evaluate(array);
-        this.ne.evaluate(array);
-        this.sw.evaluate(array);
-        this.se.evaluate(array);
-
+        this.nw.evaluate(array, useContrast);
+        this.ne.evaluate(array, useContrast);
+        this.sw.evaluate(array, useContrast);
+        this.se.evaluate(array, useContrast);
     }
 
     draw()
@@ -96,12 +119,11 @@ class QuadTree {
             }
         }
         
-        
         if (this.divided) { // Draw all the children
             this.nw.draw();
             this.ne.draw();
             this.sw.draw();
             this.se.draw();
-          }
+        }
     }
 }
