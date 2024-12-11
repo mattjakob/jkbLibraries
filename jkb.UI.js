@@ -1,3 +1,5 @@
+import p5 from 'p5';
+
 p5.prototype.createSliderWithLabel = function(min, max, value, step, labelText) {
   // Create a div to contain the slider and label
   const container = select('.UIContainer');
